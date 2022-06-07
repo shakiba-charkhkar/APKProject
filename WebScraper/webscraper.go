@@ -22,7 +22,7 @@ type WebData struct {
 
 func ReadWebData() {
 	fmt.Println("Read web Data")
-	var URL string = "https://www.dan.me.uk/torlist"
+	var URL string = "https://www.dan.me.uk/torlist/?exit"
 	response, err := http.Get(URL) //use package "net/http"
 
 	if err != nil {
@@ -44,7 +44,7 @@ func ReadWebData() {
 	}
 	bodyString := string(bodyBytes)
 	result := strings.Split(bodyString, "\n")
-	//fmt.Println(bodyString)
+	fmt.Println(bodyString)
 	StorageData(result, URL)
 
 }
@@ -104,7 +104,7 @@ func StorageData(dataArr []string, url string) {
 
 			// Set up the request object.
 			req := esapi.IndexRequest{
-				Index: "test5",
+				Index: "test6",
 				//DocumentID: strconv.Itoa(i + 1),
 				Body:    bytes.NewReader(data),
 				Refresh: "true",
