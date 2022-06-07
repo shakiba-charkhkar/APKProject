@@ -10,19 +10,21 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 
 	elasticsearch "github.com/elastic/go-elasticsearch/v8"
 	esapi "github.com/elastic/go-elasticsearch/v8/esapi"
 )
 
 type WebData struct {
-	IP  string `json:"ip"`
-	URL string `json:"url"`
+	IP               string `json:"ip"`
+	URL              string `json:"url"`
+	CreationDateTime string `json:"CreationDateTime"`
 }
 
 func ReadWebData() {
 	fmt.Println("Read web Data")
-	var URL string = "https://www.dan.me.uk/torlist/?exit"
+	var URL string = "https://www.dan.me.uk/torlist"
 	response, err := http.Get(URL) //use package "net/http"
 
 	if err != nil {
@@ -95,8 +97,10 @@ func StorageData(dataArr []string, url string) {
 
 			// Build the request body.
 			webIp := &WebData{
-				IP:  title,
-				URL: url}
+				IP:               title,
+				URL:              url,
+				CreationDateTime: time.Now().Format("2006-01-02 15:04:05"),
+			}
 			data, err := json.Marshal(webIp)
 			if err != nil {
 				log.Fatalf("Error marshaling document: %s", err)
@@ -104,7 +108,7 @@ func StorageData(dataArr []string, url string) {
 
 			// Set up the request object.
 			req := esapi.IndexRequest{
-				Index: "test6",
+				Index: "threat1",
 				//DocumentID: strconv.Itoa(i + 1),
 				Body:    bytes.NewReader(data),
 				Refresh: "true",
